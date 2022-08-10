@@ -2,6 +2,13 @@
 {
     public class Shape
     {
+        public Shape(int TBx)
+        {
+            Y = 0;
+            X = TBx;
+        }
+        public int X;
+        public int Y;
         public enum bshape
         {
             A = 1,
@@ -12,14 +19,8 @@
             F = 6,
             G = 7,
         }
-
         public bshape Form { get; set; }
-
         public List<(int x, int y)> Content;
-        
-        public int X;
-        
-        public int Y;
 
         public Shape(bshape form)
         {
@@ -84,10 +85,38 @@
             }
             return content;
         }
+        public bool MoveDown(List<Shape> bs)
+        {
+            if (!bs.Any(b => b.X == X && b.Y == Y + 1))
+            {
+                Console.SetCursorPosition(X, Y);
+                Console.Write(' ');
+                Y++;
+                Console.SetCursorPosition(X, Y);
+                Console.Write('#');
+                return true;
+            }
+            return false;
+        }
 
+        public void MoveLeft()
+        {
+            Console.SetCursorPosition(X, Y);
+            Console.Write(' ');
+            X--;
+            Console.SetCursorPosition(X, Y);
+            Console.Write('#');
+        }
 
-        //now connected to my own laptop
+        public void MoveRight()
+        {
+            Console.SetCursorPosition(X, Y);
+            Console.Write(' ');
+            X++;
+            Console.SetCursorPosition(X, Y);
+            Console.Write('#');
+        }
     }
-
 }
+
 

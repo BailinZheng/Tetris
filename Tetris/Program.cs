@@ -1,29 +1,29 @@
 ﻿using System;
 using Tetris;
-
-var block = new Block(4);
+var shape = new Shape(Shape.bshape.A);
+//var block = new Block(4);
 Console.CursorVisible = false;
 
 int height = 20;
 int width = 10;
-
-List<Block> blocks = new List<Block>();
+List<Shape> shapes = new List<Shape>();
+//List<Block> blocks = new List<Block>();
 while (true)
 {
     while (!Console.KeyAvailable)
     {
         Thread.Sleep(75);
 
-        if (block.Y == height || !block.MoveDown(blocks))
+        if (shape.Y == height || !shape.MoveDown(shapes))
         {
-            if (block.Y == 0)
+            if (shape.Y == 0)
             {
                 Console.SetCursorPosition(0, 21);
                 Console.Write("Game over");
                 return;
             }
 
-            blocks.Add(block);
+            shapes.Add(shape);
 
             // Volle Reihen
             // -----------------------------------------------------
@@ -34,7 +34,7 @@ while (true)
                 // Überprüfen, ob eine Reihe voll ist
                 for (int x = 0; x <= width; x++)
                 {
-                    if (!blocks.Any(b => b.X == x && b.Y == y))
+                    if (!shapes.Any(b => b.X == x && b.Y == y))
                     {
                         notFullRow = true;
                         break;
@@ -48,7 +48,7 @@ while (true)
                     Console.Write(new String(' ', width + 1));
 
                     // Blöcke der vollen Reihe aus der Liste entfernen
-                    blocks.RemoveAll(b => b.Y == y);
+                    shapes.RemoveAll(b => b.Y == y);
 
                     // Alle Blöcke darüber nach unten bewegen.
                     for (int yMove = y - 1; yMove > 0; yMove--)
@@ -56,36 +56,36 @@ while (true)
                         Console.SetCursorPosition(0, yMove);
                         Console.Write(new String(' ', width + 1));
 
-                        foreach (Block b in blocks.Where(b => b.Y == yMove))
+                        foreach (Shape b in shapes.Where(b => b.Y == yMove))
                         {
-                            b.MoveDown(new List<Block>());
+                            b.MoveDown(new List<Shape>());
                         }
                     }
                 }
             }
             // -----------------------------------------------------
 
-            block = new Block(4);
+            shape = new Shape(4);
         }
     }
     ConsoleKeyInfo key = Console.ReadKey(true);
 
     if (key.KeyChar == 'a')
     {
-        if (block.X > 0 && !blocks.Any(b => b.X == block.X - 1 && b.Y == block.Y))
+        if (shape.X > 0 && !shapes.Any(b => b.X == shape.X - 1 && b.Y == shape.Y))
         {
-            block.MoveLeft();
-        }
-    }
-
-    if (key.KeyChar == 'd')
-    {
-        if (block.X < width && !blocks.Any(b => b.X == block.X - 1 && b.Y == block.Y))
-        {
-            block.MoveRight();
+            shape.MoveLeft();
         }
 
-    }
-};
+        if (key.KeyChar == 'd')
+        {
+            if (shape.X < width && !shapes.Any(b => b.X == shape.X - 1 && b.Y == shape.Y))
+            {
+                shape.MoveRight();
+            }
+
+        }
+    };
+}
 
 

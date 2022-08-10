@@ -4,26 +4,26 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tetris
+/*namespace Tetris
 {
     public class Block
     {
-        public Block(int TBx)
+        public int BX;
+        public int BY;
+        public Block()
         {
-            Y = 0;
-            X = TBx;
+            BX = 0;
+            BY = 0;
         }
-        public int Y;
-        public int X;
 
-        public bool MoveDown(List<Block> bs)
+        public bool MoveDown(List<Shape> bs)
         {
-            if (!bs.Any(b => b.X == X && b.Y == Y + 1))
+            if (!bs.Any(b => b.X == BX && b.Y == BY + 1))
             {
-                Console.SetCursorPosition(X, Y);
+                Console.SetCursorPosition(BX, BY);
                 Console.Write(' ');
-                Y++;
-                Console.SetCursorPosition(X, Y);
+                BY++;
+                Console.SetCursorPosition(BX, BY);
                 Console.Write('#');
                 return true;
             }
@@ -32,20 +32,21 @@ namespace Tetris
 
         public void MoveLeft()
         {
-            Console.SetCursorPosition(X, Y);
+            Console.SetCursorPosition(BX, BY);
             Console.Write(' ');
-            X--;
-            Console.SetCursorPosition(X, Y);
+            BX--;
+            Console.SetCursorPosition(BX, BY);
             Console.Write('#');
         }
 
         public void MoveRight()
         {
-            Console.SetCursorPosition(X, Y);
+            Console.SetCursorPosition(BX, BY);
             Console.Write(' ');
-            X++;
-            Console.SetCursorPosition(X, Y);
+            BX++;
+            Console.SetCursorPosition(BX, BY);
             Console.Write('#');
         }
     }
 }
+*/
