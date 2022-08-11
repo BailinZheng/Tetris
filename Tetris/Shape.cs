@@ -2,13 +2,15 @@
 {
     public class Shape
     {
-        public Shape(int TBx)
+        public Shape()
         {
-            Y = 0;
-            X = TBx;
+            Y = 1;
+            Random random = new Random();
+            X = random.Next(3,7);
         }
         public int X;
         public int Y;
+        public int R;
         public enum bshape
         {
             A = 1,
@@ -19,25 +21,22 @@
             F = 6,
             G = 7,
         }
-        public bshape Form { get; set; }
-        public List<(int x, int y)> Content;
+        public List<(int x, int y)> rContent;
 
-        public Shape(bshape form)
-        {
-            Form = form;
-        }
-        
+        static Random _R = new Random();
+       
         public Shape(bshape form, int x, int y) 
         {
-            Form = form;
-            Content = GetContent(form);
+            var v = Enum.GetValues(typeof(bshape));
+            form = (bshape)v.GetValue(_R.Next(v.Length));
+            rContent = gContent(form);
             X = x;
             Y = y;
         }
         
-        public static List<(int x, int y)> GetContent(bshape form)
+        public List<(int x, int y)> content = new ();
+        public List<(int x, int y)> gContent(bshape form)
         {
-            List<(int x, int y)> content = new ();
             switch (form)
             {
                 case bshape.A:
@@ -85,16 +84,19 @@
             }
             return content;
         }
-        public bool MoveDown(List<Shape> bs)
+        public bool MoveDown(List<Shape> content)
         {
-            if (!bs.Any(b => b.X == X && b.Y == Y + 1))
+            if (!content.Any(b => b.X == X && b.Y == Y + 1))
             {
-                Console.SetCursorPosition(X, Y);
-                Console.Write(' ');
-                Y++;
-                Console.SetCursorPosition(X, Y);
-                Console.Write('#');
-                return true;
+                for (int i = 0; i < content.Count; i++)
+                {
+                    Console.SetCursorPosition(X, Y);
+                    Console.Write(' ');
+                    Y++;
+                    Console.SetCursorPosition(X, Y);
+                    Console.Write('#');
+                    return true;
+                }
             }
             return false;
         }

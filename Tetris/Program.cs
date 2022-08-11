@@ -1,13 +1,12 @@
 ﻿using System;
 using Tetris;
-var shape = new Shape(Shape.bshape.A);
+var shape = new Shape();
 //var block = new Block(4);
 Console.CursorVisible = false;
 
-int height = 20;
-int width = 10;
+const int height = 20;
+const int width = 10;
 List<Shape> shapes = new List<Shape>();
-//List<Block> blocks = new List<Block>();
 while (true)
 {
     while (!Console.KeyAvailable)
@@ -65,7 +64,7 @@ while (true)
             }
             // -----------------------------------------------------
 
-            shape = new Shape(4);
+            shape = new Shape();
         }
     }
     ConsoleKeyInfo key = Console.ReadKey(true);
