@@ -21,7 +21,6 @@
             F = 6,
             G = 7,
         }
-        public List<(int x, int y)> rContent;
 
         static Random _R = new Random();
        
@@ -33,49 +32,50 @@
             X = x;
             Y = y;
         }
+        public List<(int x, int y)> rContent;
         
-        public List<(int x, int y)> content = new ();
+        public List<(int x, int y)> content;
         public List<(int x, int y)> gContent(bshape form)
         {
             switch (form)
             {
-                case bshape.A:
+                case (bshape)1:
                     content[0] = (0, 0);
                     content[1] = (0, 1);
                     content[2] = (0, 2);
                     content[3] = (0, 3);
                     break;
-                case bshape.B:
+                case (bshape)2:
                     content[0] = (1, 0);
                     content[1] = (1, 1);
                     content[2] = (1, 2);
                     content[3] = (0, 2);
                     break;
-                case bshape.C:
+                case (bshape)3:
                     content[0] = (0, 0);
                     content[1] = (0, 1);
                     content[2] = (0, 2);
                     content[3] = (1, 2);
                     break;
-                case bshape.D:
+                case (bshape)4:
                     content[0] = (0, 0);
                     content[1] = (1, 0);
                     content[2] = (0, 1);
                     content[3] = (1, 1);
                     break;
-                case bshape.E:
+                case (bshape)5:
                     content[0] = (2, 0);
                     content[1] = (1, 0);
                     content[2] = (1, 1);
                     content[3] = (0, 1);
                     break;
-                case bshape.F:
+                case (bshape)6:
                     content[0] = (0, 0);
                     content[1] = (1, 0);
                     content[2] = (2, 0);
                     content[3] = (1, 1);
                     break;
-                case bshape.G:
+                case (bshape)7:
                     content[0] = (0, 0);
                     content[1] = (1, 0);
                     content[2] = (1, 1);
