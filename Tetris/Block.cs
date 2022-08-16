@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tetris
 {
+
     public class Block
     {
         public Block(int x, int y)
@@ -14,6 +15,7 @@ namespace Tetris
             Y = y;
         }
 
+        const char blockSymbol = 'O';
         public int X;
         public int Y;
 
@@ -21,14 +23,38 @@ namespace Tetris
         {
             if (!blocks.Any(shape => shape.X == X && shape.Y == Y + 1))
             {
-                Console.SetCursorPosition(X, Y);
-                Console.Write(' ');
+                if (X >= 1 && Y >= 0)
+                {
+                    Console.SetCursorPosition(X, Y);
+                    Console.Write(' ');
+                }
                 Y++;
-                Console.SetCursorPosition(X, Y);
-                Console.Write('#');
+                if (X >= 1 && Y >= 0)
+                {
+                    Console.SetCursorPosition(X, Y);
+                    Console.Write(blockSymbol);
+                }
                 return true;
             }
-                return false;
+            return false;
+        }
+
+        public void Delete(int x = 0, int y = 0)
+        {
+            if (X + x >= 1 && Y + y >= 0)
+            {
+                Console.SetCursorPosition(X + x, Y + y);
+                Console.Write(' ');
+            }
+        }
+
+        public void Draw(int x = 0, int y = 0)
+        {
+            if (X + x >= 1 && Y + y >= 0)
+            {
+                Console.SetCursorPosition(X + x, Y + y);
+                Console.Write(blockSymbol);
+            }
         }
 
         public void MoveLeft()
@@ -37,7 +63,7 @@ namespace Tetris
             Console.Write(' ');
             X--;
             Console.SetCursorPosition(X, Y);
-            Console.Write('#');
+            Console.Write(blockSymbol);
         }
 
         public void MoveRight()
@@ -46,7 +72,7 @@ namespace Tetris
             Console.Write(' ');
             X++;
             Console.SetCursorPosition(X, Y);
-            Console.Write('#');
+            Console.Write(blockSymbol);
         }
     }
 }
