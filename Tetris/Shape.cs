@@ -1,17 +1,10 @@
-﻿namespace Tetris
+﻿using System.Linq;
+
+namespace Tetris
 {
     public class Shape
     {
-        public Shape()
-        {
-            Y = 1;
-            Random random = new Random();
-            X = random.Next(3,7);
-        }
-        public int X;
-        public int Y;
-        public int R;
-        public enum bshape
+        private enum bshape
         {
             A = 1,
             B = 2,
@@ -22,101 +15,131 @@
             G = 7,
         }
 
-        static Random _R = new Random();
-       
-        public Shape(bshape form, int x, int y) 
+        public Shape()
         {
-            var v = Enum.GetValues(typeof(bshape));
-            form = (bshape)v.GetValue(_R.Next(v.Length));
-            rContent = gContent(form);
-            X = x;
-            Y = y;
-        }
-        public List<(int x, int y)> rContent;
-        
-        public List<(int x, int y)> content;
-        public List<(int x, int y)> gContent(bshape form)
-        {
-            switch (form)
+            var shapeList = Enum.GetValues<bshape>();
+            bshape shape = shapeList[new Random().Next(shapeList.Length)];
+            Blocks = new();
+
+            switch (shape)
             {
                 case (bshape)1:
-                    content[0] = (0, 0);
-                    content[1] = (0, 1);
-                    content[2] = (0, 2);
-                    content[3] = (0, 3);
+                    Blocks.Add(new Block(5 + 0, 0 + 0));
+                    Blocks.Add(new Block(5 + 1, 0 + 0));
+                    Blocks.Add(new Block(5 + 2, 0 + 0));
+                    Blocks.Add(new Block(5 + 3, 0 + 0));
                     break;
                 case (bshape)2:
-                    content[0] = (1, 0);
-                    content[1] = (1, 1);
-                    content[2] = (1, 2);
-                    content[3] = (0, 2);
+                    Blocks.Add(new Block(5 + 0, 0 + 1));
+                    Blocks.Add(new Block(5 + 1, 0 + 1));
+                    Blocks.Add(new Block(5 + 1, 0 + 0));
+                    Blocks.Add(new Block(5 + 2, 0 + 1));
                     break;
                 case (bshape)3:
-                    content[0] = (0, 0);
-                    content[1] = (0, 1);
-                    content[2] = (0, 2);
-                    content[3] = (1, 2);
+                    Blocks.Add(new Block(5 + 0, 0 + 0));
+                    Blocks.Add(new Block(5 + 0, 0 + 1));
+                    Blocks.Add(new Block(5 + 0, 0 + 2));
+                    Blocks.Add(new Block(5 + 1, 0 + 2));
                     break;
                 case (bshape)4:
-                    content[0] = (0, 0);
-                    content[1] = (1, 0);
-                    content[2] = (0, 1);
-                    content[3] = (1, 1);
+                    Blocks.Add(new Block(5 + 0, 0 + 0));
+                    Blocks.Add(new Block(5 + 1, 0 + 0));
+                    Blocks.Add(new Block(5 + 0, 0 + 1));
+                    Blocks.Add(new Block(5 + 1, 0 + 1));
                     break;
                 case (bshape)5:
-                    content[0] = (2, 0);
-                    content[1] = (1, 0);
-                    content[2] = (1, 1);
-                    content[3] = (0, 1);
+                    Blocks.Add(new Block(5 + 2, 0 + 0));
+                    Blocks.Add(new Block(5 + 1, 0 + 0));
+                    Blocks.Add(new Block(5 + 1, 0 + 1));
+                    Blocks.Add(new Block(5 + 0, 0 + 1));
                     break;
                 case (bshape)6:
-                    content[0] = (0, 0);
-                    content[1] = (1, 0);
-                    content[2] = (2, 0);
-                    content[3] = (1, 1);
+                    Blocks.Add(new Block(5 + 0, 0 + 0));
+                    Blocks.Add(new Block(5 + 1, 0 + 0));
+                    Blocks.Add(new Block(5 + 2, 0 + 0));
+                    Blocks.Add(new Block(5 + 1, 0 + 1));
                     break;
                 case (bshape)7:
-                    content[0] = (0, 0);
-                    content[1] = (1, 0);
-                    content[2] = (1, 1);
-                    content[3] = (2, 1);
+                    Blocks.Add(new Block(5 + 0, 0 + 0));
+                    Blocks.Add(new Block(5 + 1, 0 + 0));
+                    Blocks.Add(new Block(5 + 1, 0 + 1));
+                    Blocks.Add(new Block(5 + 2, 0 + 1));
                     break;
             }
-            return content;
         }
-        public bool MoveDown(List<Shape> content)
+
+        public List<Block> Blocks;
+
+        public bool MoveDown(List<Block> otherBlocks)
         {
-            if (!content.Any(b => b.X == X && b.Y == Y + 1))
+            if (!Collides(otherBlocks))
             {
-                for (int i = 0; i < content.Count; i++)
+                int maxY = Blocks.Max(block => block.Y);
+                int minY = Blocks.Min(block => block.Y);
+
+                for (int i = maxY; i >= minY; i--)
                 {
-                    Console.SetCursorPosition(X, Y);
-                    Console.Write(' ');
-                    Y++;
-                    Console.SetCursorPosition(X, Y);
-                    Console.Write('#');
-                    return true;
+                    foreach (Block blockToMove in Blocks.Where(block => block.Y == i))
+                    {
+                        if (!blockToMove.MoveDown(otherBlocks))
+                        {
+                            return false;
+                        }
+                    }
                 }
+
+                return true;
             }
+
             return false;
         }
 
-        public void MoveLeft()
+        public void MoveLeft(List<Block> blocks)
         {
-            Console.SetCursorPosition(X, Y);
-            Console.Write(' ');
-            X--;
-            Console.SetCursorPosition(X, Y);
-            Console.Write('#');
+            if (!Blocks.Any(block => block.X == 0)
+                && !blocks.Any(deadBlock => Blocks.Any(block => 
+                    block.X - 1 == deadBlock.X && deadBlock.Y == block.Y)))
+            {
+                int maxX = Blocks.Max(block => block.X);
+                int minX = Blocks.Min(block => block.X);
+
+                for (int i = minX; i <= maxX; i++)
+                {
+                    foreach (Block blockToMove in Blocks.Where(block => block.X == i))
+                    {
+                        blockToMove.MoveLeft();
+                    }
+                }
+            }
         }
 
-        public void MoveRight()
+        public void MoveRight(List<Block> blocks)
         {
-            Console.SetCursorPosition(X, Y);
-            Console.Write(' ');
-            X++;
-            Console.SetCursorPosition(X, Y);
-            Console.Write('#');
+            if (!Blocks.Any(block => block.X == 10) 
+                && !blocks.Any(deadBlock => Blocks.Any(block => 
+                    block.X + 1 == deadBlock.X && deadBlock.Y == block.Y)))
+            {
+                int maxX = Blocks.Max(block => block.X);
+                int minX = Blocks.Min(block => block.X);
+
+                for (int i = maxX; i >= minX; i--)
+                {
+                    foreach (Block blockToMove in Blocks.Where(block => block.X == i))
+                    {
+                        blockToMove.MoveRight();
+                    }
+                }
+            }
+        }
+
+        public bool Collides(List<Block> blocks)
+        {
+            if (blocks.Any(block => Blocks.Any(shapeBlock => shapeBlock.X == block.X && shapeBlock.Y+1 == block.Y)))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

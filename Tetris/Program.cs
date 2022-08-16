@@ -1,30 +1,33 @@
 ﻿using System;
 using Tetris;
-var shape = new Shape();
 //var block = new Block(4);
 Console.CursorVisible = false;
 
 const int height = 20;
 const int width = 10;
-List<Shape> shapes = new List<Shape>();
+
+Shape? shape = new Shape();
+List<Block> blocks = new List<Block>();
+Console.CursorVisible = false;
+
 while (true)
 {
     while (!Console.KeyAvailable)
     {
-        Thread.Sleep(75);
+        Thread.Sleep(250);
 
-        if (shape.Y == height || !shape.MoveDown(shapes))
+        if (shape.Blocks.Any(block => block.Y == height) || !shape.MoveDown(blocks))
         {
-            if (shape.Y == 0)
+            if (shape.Blocks.Any(block => block.Y == 0))
             {
                 Console.SetCursorPosition(0, 21);
                 Console.Write("Game over");
                 return;
             }
 
-            shapes.Add(shape);
+            blocks.AddRange(shape.Blocks);
 
-            // Volle Reihen
+            #region Volle Reihen leeren und verschieben
             // -----------------------------------------------------
             for (int y = 0; y <= height; y++)
             {
@@ -33,7 +36,7 @@ while (true)
                 // Überprüfen, ob eine Reihe voll ist
                 for (int x = 0; x <= width; x++)
                 {
-                    if (!shapes.Any(b => b.X == x && b.Y == y))
+                    if (!blocks.Any(b => b.X == x && b.Y == y))
                     {
                         notFullRow = true;
                         break;
@@ -47,7 +50,7 @@ while (true)
                     Console.Write(new String(' ', width + 1));
 
                     // Blöcke der vollen Reihe aus der Liste entfernen
-                    shapes.RemoveAll(b => b.Y == y);
+                    blocks.RemoveAll(b => b.Y == y);
 
                     // Alle Blöcke darüber nach unten bewegen.
                     for (int yMove = y - 1; yMove > 0; yMove--)
@@ -55,14 +58,15 @@ while (true)
                         Console.SetCursorPosition(0, yMove);
                         Console.Write(new String(' ', width + 1));
 
-                        foreach (Shape b in shapes.Where(b => b.Y == yMove))
+                        foreach (Block block in blocks.Where(b => b.Y == yMove))
                         {
-                            b.MoveDown(new List<Shape>());
+                            block.MoveDown(new List<Block>());
                         }
                     }
                 }
             }
             // -----------------------------------------------------
+            #endregion
 
             shape = new Shape();
         }
@@ -71,20 +75,12 @@ while (true)
 
     if (key.KeyChar == 'a')
     {
-        if (shape.X > 0 && !shapes.Any(b => b.X == shape.X - 1 && b.Y == shape.Y))
-        {
-            shape.MoveLeft();
-        }
-
-        if (key.KeyChar == 'd')
-        {
-            if (shape.X < width && !shapes.Any(b => b.X == shape.X - 1 && b.Y == shape.Y))
-            {
-                shape.MoveRight();
-            }
-
-        }
-    };
+        shape.MoveLeft(blocks);
+    }
+    if (key.KeyChar == 'd')
+    {
+        shape.MoveRight(blocks);
+    }
 }
 
 
